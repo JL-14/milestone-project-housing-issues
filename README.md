@@ -85,11 +85,28 @@ Although your friend has an excellent understanding of property prices in her ow
 
 ## Hypothesis and how to validate?
 
-* List here your project hypothesis(es) and how you envision validating it (them).
+1. A machine learning model will be able to predict house prices in Ames, Iowa, based on information from a historic dataset of house sales in Ames.
+- Validation: This hypothesis will be validated by the training of a machine learning model, using different logarithms and hyperparameters to achieve an acceptable outcome.
+2. Based on available literature, the factors in the dataset most likely to affect house prices are:
+* house age, 
+* size (in terms of number of bedrooms and overall square fottage), 
+* house condition
+* quality of build
+Accordingly, these are the variables expected to have the greatest predictive value in the current set.
+- Validation: Predictive Power Scores and Principal Component Analysis will be used to establish the predictive power of variables.
+3. As considerable factors affecting house values are not included in the available dataset (relating to location, neighbourhood, and wider macro-economic factors), we expect there to be considerable amounts of variance that cannot be accounted for.
+- Validation: Mean Average Variance scores
 
 ## The rationale to map the business requirements to the Data Visualisations and ML tasks
 
-* List your business requirements and a rationale to map them to the Data Visualisations and ML tasks.
+* Business Requirement 1: Classification, Regression, Cluster and Data Analysis
+- To predict sales price, a categorical outcome variable will be constructed dividing predicted sales prices into bands.
+- A regression model will be used to predict absolute house price, or a categorical variable of sales price bands will be used in a classification model if performance of the regression model is inadequate.
+- Dataset house sales will be clustered according to the most important variables to predict the house price group to which any given house will belong (based on its characteristics).
+* Business Requirement 2: Data Visualisation and Custom User Interface
+- Using the most accurate ML model possible, a set of data visualisations (scatterplots, bar charts, and heat maps) will be presented to assist in the valuation of the user's existing houses.
+-An interactive interface in the form of a dashboard will be constructed to assist in the valuation.
+
 
 ## ML Business Case
 
