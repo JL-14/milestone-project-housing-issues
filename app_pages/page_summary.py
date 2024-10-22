@@ -2,7 +2,7 @@ import streamlit as st
 
 def page_summary_body():
 
-    st.write("# Summary of a House Price Predictor for Ames, Iowa")
+    st.write("### Summary of a House Price Predictor for Ames, Iowa")
 
     # text based on README file - "Dataset Content" section
     st.info(
