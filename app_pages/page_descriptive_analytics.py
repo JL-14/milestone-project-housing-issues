@@ -1,8 +1,8 @@
-# import plotly.express as px
-# import numpy as np
-# from feature_engine.discretisation import ArbitraryDiscretiser
+import plotly.express as px
+import numpy as np
+from feature_engine.discretisation import ArbitraryDiscretiser
 import streamlit as st
-# from src.data_management import load_telco_data
+from src.data_management import load_houseprice_data
 
 # import matplotlib.pyplot as plt
 import seaborn as sns
@@ -17,59 +17,64 @@ def page_descriptive_analytics_body():
         f"This is where the descriptive data and correlation/ PPS charts will appear"
     )
 
-#     # load data
-#     df = load_telco_data()
+    # load data
+    df = load_houseprice_data()
 
-#     # hard copied from churned customer study notebook
-#     vars_to_study = ['Contract', 'InternetService',
-#                      'OnlineSecurity', 'TechSupport', 'tenure']
+    # hard copied from churned customer study notebook
+    vars_to_study = ['1stFlrSF', 'GrLivArea', 'KitchenQual',
+                    'OverallQual', 'TotalBsmtSF', 'YearBuilt',
+                    'GarageYrBlt']
 
-#     st.write("### Churned Customer Study")
-#     st.info(
-#         f"* The client is interested in understanding the patterns from the customer base "
-#         f"so that the client can learn the most relevant variables correlated "
-#         f"to a churned customer.")
+    st.write("### Churned Customer Study")
+    st.info(
+        f"* The client is interested in understanding how house saleprice is related to the"
+        f"characteristics of a house. A correlation study has therefore been conducted to"
+        f"examine the relationship between characteristics and house price."
+        f"Predictive Power Score analysis has also been conducted to identify the"
+        f"characteristics that are the most powerful predictors of house price.")
 
-#     # inspect data
-#     if st.checkbox("Inspect Customer Base"):
-#         st.write(
-#             f"* The dataset has {df.shape[0]} rows and {df.shape[1]} columns, "
-#             f"find below the first 10 rows.")
+    # inspect data
+    if st.checkbox("Inspect Full Houseprice Dataset"):
+        st.write(
+            f"* The dataset has {df.shape[0]} rows and {df.shape[1]} columns, "
+            f"find below the first 10 rows.")
 
-#         st.write(df.head(10))
+        st.write(df.head(10))
 
-#     st.write("---")
+    st.write("---")
 
-#     # Correlation Study Summary
-#     st.write(
-#         f"* A correlation study was conducted in the notebook to better understand how "
-#         f"the variables are correlated to Churn levels. \n"
-#         f"The most correlated variable are: **{vars_to_study}**"
-#     )
+    # Correlation Study Summary
+    st.write(
+        f"* Following the correlation study, the following variables were found to be most"
+        f"strongly correlated with house price.\n"
+        f"The most correlated variable were found to be: **{vars_to_study}**"
+    )
 
-#     # Text based on "02 - Churned Customer Study" notebook - "Conclusions and Next steps" section
-#     st.info(
-#         f"The correlation indications and plots below interpretation converge. "
-#         f"It is indicated that: \n"
-#         f"* A churned customer typically has a month-to-month contract \n"
-#         f"* A churned customer typically has fibre optic. \n"
-#         f"* A churned customer typically doesn't have tech support. \n"
-#         f"* A churned customer doesn't have online security. \n"
-#         f"* A churned customer typically has low tenure levels. \n"
-#     )
+    # Text based on "02 - Churned Customer Study" notebook - "Conclusions and Next steps" section
+    st.info(
+        f"The correlation study found that houseprice is related to: \n"
+        f"- The overall quality of the house (variable: OverallQual)"
+        f"- The size of the living area above ground, 1st floor square feet, and basement size (square feet)"
+        f"(variables: GrLivArea, 1stFlrSF, TotalBsmtSF)"
+        f"- The quality of the kitchen (variable: KitchenQual)"
+        f"- The year the house and garage was built (variables: YearBuilt, GarageYrBlt)"
+        f"\n \n Some of the characteristics are clearly linked (such as the year the house was built"
+        f"and the year the garage was built, and the size of the 1st floor, living area above ground, and the basement size),"
+        f"as can be seen in the Spearman correlation heatmap below."
+    )
 
-#     # Code copied from "02 - Churned Customer Study" notebook - "EDA on selected variables" section
-#     df_eda = df.filter(vars_to_study + ['Churn'])
+    # Code copied from "02 - Churned Customer Study" notebook - "EDA on selected variables" section
+    df_eda = df.filter(vars_to_study + ['SalePrice'])
 
-#     # Individual plots per variable
-#     if st.checkbox("Churn Levels per Variable"):
-#         churn_level_per_variable(df_eda)
+    # Individual plots per variable
+    if st.checkbox("Houseprice per Correlated Variable"):
+        houseprice_per_variable(df_eda)
 
-#     # Parallel plot
-#     if st.checkbox("Parallel Plot"):
-#         st.write(
-#             f"* Information in yellow indicates the profile from a churned customer")
-#         parallel_plot_churn(df_eda)
+    # Parallel plot
+    if st.checkbox("Correlation Heatmap"):
+        st.write(
+            f"* Boxes that are lighter green or yellow show more highly correlated variables)")
+        parallel_plot_churn(df_eda)
 
 
 # # function created using "02 - Churned Customer Study" notebook code - "Variables Distribution by Churn" section
