@@ -1,11 +1,13 @@
 import plotly.express as px
+import matplotlib.pyplot as plt
 import numpy as np
 from feature_engine.discretisation import ArbitraryDiscretiser
 import streamlit as st
+import seaborn as sns
+import pandas as pd
+import ppscore as pps
 from src.data_management import load_houseprice_data
 
-# import matplotlib.pyplot as plt
-import seaborn as sns
 sns.set_style("whitegrid")
 
 
@@ -52,83 +54,176 @@ def page_descriptive_analytics_body():
 
     # Text based on "02 - Churned Customer Study" notebook - "Conclusions and Next steps" section
     st.info(
-        f"The correlation study found that houseprice is related to: \n"
-        f"- The overall quality of the house (variable: OverallQual)"
-        f"- The size of the living area above ground, 1st floor square feet, and basement size (square feet)"
-        f"(variables: GrLivArea, 1stFlrSF, TotalBsmtSF)"
-        f"- The quality of the kitchen (variable: KitchenQual)"
-        f"- The year the house and garage was built (variables: YearBuilt, GarageYrBlt)"
-        f"\n \n Some of the characteristics are clearly linked (such as the year the house was built"
-        f"and the year the garage was built, and the size of the 1st floor, living area above ground, and the basement size),"
-        f"as can be seen in the Spearman correlation heatmap below."
+        "The correlation study found that houseprice is related to: \n"
+        "- The overall quality of the house (variable: OverallQual) \n"
+        "- The size of the living area above ground, 1st floor square feet, and basement size (square feet) \n"
+        "(variables: GrLivArea, 1stFlrSF, TotalBsmtSF) \n"
+        "- The quality of the kitchen (variable: KitchenQual) \n"
+        "- The year the house and garage was built (variables: YearBuilt, GarageYrBlt)\n"
+        "\n \n Some of the characteristics are clearly linked (such as the year the house was built"
+        "and the year the garage was built, and the size of the 1st floor, living area above ground, and the basement size),"
+        "as can be seen in the Spearman correlation heatmap below."
     )
 
-    # Code copied from "02 - Churned Customer Study" notebook - "EDA on selected variables" section
+    # Interactive checkboxes
     df_eda = df.filter(vars_to_study + ['SalePrice'])
 
     # Individual plots per variable
     if st.checkbox("Houseprice per Correlated Variable"):
         houseprice_per_variable(df_eda)
 
-    # Parallel plot
+    # Heatmap
     if st.checkbox("Correlation Heatmap"):
         st.write(
-            f"* Boxes that are lighter green or yellow show more highly correlated variables)")
-        parallel_plot_churn(df_eda)
+            "* Boxes that are lighter green or yellow show more highly correlated variables)")
+        correlation_heatmap(df)
 
 
-# # function created using "02 - Churned Customer Study" notebook code - "Variables Distribution by Churn" section
-# def churn_level_per_variable(df_eda):
-#     target_var = 'Churn'
+## Variable Distribution by SalePrice" section
+def houseprice_per_variable(df):
+    vars_to_study = ['1stFlrSF', 'GrLivArea', 'KitchenQual',
+                    'OverallQual', 'TotalBsmtSF', 'YearBuilt',
+                    'GarageYrBlt']
+    palette = sns.color_palette("coolwarm", 10)
+    target_var = df['SalePrice']
+    df_eda = df.filter(vars_to_study + ['SalePrice'])
 
-#     for col in df_eda.drop([target_var], axis=1).columns.to_list():
-#         if df_eda[col].dtype == 'object':
-#             plot_categorical(df_eda, col, target_var)
-#         else:
-#             plot_numerical(df_eda, col, target_var)
+    # Defining the label mappings for KitchenQual and OverallQual
+    kitchen_qual_mapping = {4: 'Excellent', 3: 'Good', 2: 'Typical', 1: 'Fair', 0: 'Poor'}
+    overall_qual_mapping = {1: 'Very Poor', 2: 'Poor', 3: 'Fair', 4: 'Below Average',
+                            5: 'Average', 6: 'Above Average', 7: 'Good',
+                            8: 'Very Good', 9: 'Excellent', 10: 'Very Excellent'}
+
+    def plot_categorical(df_eda, col, target_var, label_mapping=None, categories_order=None):
+        fig, ax = plt.subplots(figsize=(12, 5))  # Create a figure and axis object
+        sns.countplot(data=df_eda, hue='SalePriceBand', x=col, palette=palette, order=categories_order, ax=ax)
+
+        # Setting x-tick labels using the label mapping for KitchenQual and OverallQual
+        if label_mapping:
+            tick_labels = [label_mapping.get(val, val) for val in categories_order]
+            ax.set_xticks(range(len(categories_order)))
+            ax.set_xticklabels(tick_labels, rotation=90)
+        
+        ax.set_title(f"{col}", fontsize=20, y=1.05)
+        
+        st.pyplot(fig)
+
+    # Ensuring full range of categories (even with zero values)
+    kitchen_qual_order = sorted(kitchen_qual_mapping.keys())
+    overall_qual_order = sorted(overall_qual_mapping.keys())
+
+    # Creating SalePriceBand for visualisation
+    min_price = df_eda['SalePrice'].min()
+    max_price = df_eda['SalePrice'].max()
+
+    bin_width = (max_price - min_price) / 10
+    bins = [min_price + i * bin_width for i in range(11)]
+    df_eda['SalePriceBand'] = pd.cut(df_eda['SalePrice'], bins=bins, labels=range(10), include_lowest=True)
 
 
-# # code copied from "02 - Churned Customer Study" notebook - "Variables Distribution by Churn" section
-# def plot_categorical(df, col, target_var):
-#     fig, axes = plt.subplots(figsize=(12, 5))
-#     sns.countplot(data=df, x=col, hue=target_var,
-#                   order=df[col].value_counts().index)
-#     plt.xticks(rotation=90)
-#     plt.title(f"{col}", fontsize=20, y=1.05)
-#     st.pyplot(fig)  # st.pyplot() renders image, in notebook is plt.show()
+    def plot_numerical(df_eda, col, target_var, label_mapping=None):
+        fig, ax = plt.subplots(figsize=(8, 5))
+
+        # Plot histogram for the single numerical variable
+        sns.histplot(data=df_eda, x=col, kde=True, hue='SalePriceBand', element="step", palette=palette, ax=ax)
+        
+        ax.set_title(f"{col}", fontsize=20, y=1.05)
+        
+        st.pyplot(fig)
+
+    def plot_scatter_with_correlation(df_eda, x_col, y_col):
+        """Plots scatter plot between two numerical variables with a regression line"""
+        fig, ax = plt.subplots(figsize=(8, 5))
+        
+        sns.regplot(data=df_eda, x=x_col, y=y_col, scatter_kws={"s": 20}, line_kws={"color": "red"}, ci=None, ax=ax)
+        
+        ax.set_title(f"Scatter Plot of {x_col} vs {y_col}", fontsize=20, y=1.05)
+        
+        st.pyplot(fig)
+
+    # Visualisation loop
+    target_var = df['SalePrice']
+    vars_to_study = ['1stFlrSF', 'GrLivArea', 'KitchenQual',
+                    'OverallQual', 'TotalBsmtSF', 'YearBuilt',
+                    'GarageYrBlt']
+    for col in vars_to_study:
+        if col == 'KitchenQual':
+            plot_categorical(df_eda, col, target_var, label_mapping=kitchen_qual_mapping, categories_order=kitchen_qual_order)
+        elif col == 'OverallQual':
+            plot_categorical(df_eda, col, target_var, label_mapping=overall_qual_mapping, categories_order=overall_qual_order)
+        elif df_eda[col].dtype == 'object':
+            plot_categorical(df_eda, col, target_var)
+        else:
+            # plot_numerical(df_eda, col, target_var)
+
+            # Add scatter plot with correlation line for numerical variables (e.g., SalePrice vs another numerical column)
+            plot_scatter_with_correlation(df_eda, col, target_var)
+
+## Correlation Heatmap section, Notebook 3
+def correlation_heatmap(df):
+
+    def heatmap_corr(corr_matrix, threshold, figsize=(20, 12), font_annot=8):
+        if len(corr_matrix.columns) > 1:
+            # Create a mask for the upper triangle of the heatmap
+            mask = np.zeros_like(corr_matrix, dtype=np.bool)
+            mask[np.triu_indices_from(mask)] = True
+            mask[abs(corr_matrix) < threshold] = True
+
+            # Create a figure and axis object
+            fig, axes = plt.subplots(figsize=figsize)
+            
+            # Generate the heatmap
+            sns.heatmap(corr_matrix, annot=True, xticklabels=True, yticklabels=True,
+                        mask=mask, cmap='viridis', annot_kws={"size": font_annot}, ax=axes,
+                        linewidth=0.5)
+            
+            # Optional: remove y-tick rotation
+            axes.set_yticklabels(corr_matrix.columns, rotation=0)
+            
+            # Render the figure in Streamlit
+            st.pyplot(fig)  # Pass the figure to st.pyplot to render it in the dashboard
+
+    def CalculateCorrAndPPS(df):
+        # Calculate correlation matrices for all variables in df
+        df_corr_spearman = df.corr(method="spearman")
+        df_corr_pearson = df.corr(method="pearson")
+
+        # Calculate PPS matrix for all variables in df
+        pps_matrix_raw = pps.matrix(df)
+        pps_matrix = pps_matrix_raw.filter(['x', 'y', 'ppscore']).pivot(columns='x', index='y', values='ppscore')
+
+        # Display PPS score statistics
+        pps_score_stats = pps_matrix_raw.query("ppscore < 1").filter(['ppscore']).describe().T
+        print("PPS threshold - check PPS score IQR to decide threshold for heatmap \n")
+        print(pps_score_stats.round(3))
+
+        return df_corr_pearson, df_corr_spearman, pps_matrix
+
+    def DisplayCorrAndPPS(df_corr_pearson, df_corr_spearman, pps_matrix, CorrThreshold, PPS_Threshold,
+            figsize=(20, 12), font_annot=8):
+
+        st.write("*** Heatmap: Spearman Correlation ***")
+        st.write("It evaluates monotonic relationships \n")
+        
+        # Display the heatmap for Spearman correlation
+        heatmap_corr(df_corr_spearman, threshold=CorrThreshold, figsize=figsize, font_annot=font_annot)
+
+        st.write("*** Heatmap: Pearson Correlation ***")
+        st.write("It evaluates linear relationships \n")
+        heatmap_corr(df_corr_pearson, threshold=CorrThreshold, figsize=figsize, font_annot=font_annot)
+
+        st.write("*** Heatmap: PPS (Predictive Power Score) ***")
+        st.write("It evaluates predictive relationships \n")
+        heatmap_corr(pps_matrix, threshold=PPS_Threshold, figsize=figsize, font_annot=font_annot)
+
+    # Calculate correlation and PPS matrices for all variables in df
+    df_corr_pearson, df_corr_spearman, pps_matrix = CalculateCorrAndPPS(df)
+
+    # Display correlation and PPS heatmaps for all variables in df
+    DisplayCorrAndPPS(df_corr_pearson=df_corr_pearson,
+                      df_corr_spearman=df_corr_spearman, 
+                      pps_matrix=pps_matrix,
+                      CorrThreshold=0.4, PPS_Threshold=0.2,
+                      figsize=(12, 10), font_annot=10)
 
 
-# # code copied from "02 - Churned Customer Study" notebook - "Variables Distribution by Churn" section
-# def plot_numerical(df, col, target_var):
-#     fig, axes = plt.subplots(figsize=(8, 5))
-#     sns.histplot(data=df, x=col, hue=target_var, kde=True, element="step")
-#     plt.title(f"{col}", fontsize=20, y=1.05)
-#     st.pyplot(fig)  # st.pyplot() renders image, in notebook is plt.show()
-
-
-# # function created using "02 - Churned Customer Study" notebook code - Parallel Plot section
-# def parallel_plot_churn(df_eda):
-
-#     # hard coded from "disc.binner_dict_['tenure']"" result,
-#     tenure_map = [-np.Inf, 6, 12, 18, 24, np.Inf]
-#     # found at "02 - Churned Customer Study" notebook
-#     # under "Parallel Plot" section
-#     disc = ArbitraryDiscretiser(binning_dict={'tenure': tenure_map})
-#     df_parallel = disc.fit_transform(df_eda)
-
-#     n_classes = len(tenure_map) - 1
-#     classes_ranges = disc.binner_dict_['tenure'][1:-1]
-#     LabelsMap = {}
-#     for n in range(0, n_classes):
-#         if n == 0:
-#             LabelsMap[n] = f"<{classes_ranges[0]}"
-#         elif n == n_classes-1:
-#             LabelsMap[n] = f"+{classes_ranges[-1]}"
-#         else:
-#             LabelsMap[n] = f"{classes_ranges[n-1]} to {classes_ranges[n]}"
-
-#     df_parallel['tenure'] = df_parallel['tenure'].replace(LabelsMap)
-#     fig = px.parallel_categories(
-#         df_parallel, color="Churn", width=750, height=500)
-#     # we use st.plotly_chart() to render, in notebook is fig.show()
-#     st.plotly_chart(fig)
