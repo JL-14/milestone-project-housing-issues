@@ -7,6 +7,12 @@ from app_pages import page_project_hypothesis
 from app_pages import page_regression_original
 from app_pages import page_regression_transformed
 
+# Set the page configuration as the first Streamlit command
+# st.set_page_config(page_title="House Price Predictor", layout="centered")
+
+# Initialize the app
+app = MultiPage(app_name="House Price Predictor")
+
 # load pages scripts
 from app_pages.page_summary import page_summary_body
 from app_pages.page_descriptive_analytics import page_descriptive_analytics_body

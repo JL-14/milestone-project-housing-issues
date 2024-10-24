@@ -1,161 +1,85 @@
 import streamlit as st
-# import pandas as pd
-# from src.data_management import load_telco_data, load_pkl_file
-# from src.machine_learning.predictive_analysis_ui import (
-#     predict_churn,
-#     predict_tenure,
-#     predict_cluster)
-
+import pandas as pd
+import numpy as np
+import joblib
+from src.data_management import load_pkl_file
 
 def page_houseprices_predictor_tool_body():
-
-    st.write("### The Houseprice Predictor Tool for estimating houseprices")
-
+    st.write("### Houseprice Predictor Interface")
     st.info(
-        f"This is where the House Price Predictor will follow the estimate of house prices for inherited houses will appear"
+        f"* The client is interested in determining the likely sale price for 4 inherited houses."
+        f"Through using Machine Learning techniques a model was developed to provide estimates,"
+        f" and based on the existing data for house prices in Ames, the predicted values houseprices are:\n"
+        f"* House 1: **$171,704.51**\n"
+        f"* House 2: **$178,962.06**\n"
+        f"* House 3: **$194,297.98**\n"
+        f"* House 4: **$184,463.36**\n"
+        f"\nThe client also wanted a tool for predicting the likely houseprice of other properties."
+        f" A tool has therefore been provided, enabling the estimation of houseprice based on a smaller"
+        f"set of characteristics."
     )
+    st.write("---")
 
-#     # load predict churn files
-#     version = 'v1'
-#     churn_pipe_dc_fe = load_pkl_file(
-#         f'outputs/ml_pipeline/predict_churn/{version}/clf_pipeline_data_cleaning_feat_eng.pkl')
-#     churn_pipe_model = load_pkl_file(
-#         f"outputs/ml_pipeline/predict_churn/{version}/clf_pipeline_model.pkl")
-#     churn_features = (pd.read_csv(f"outputs/ml_pipeline/predict_churn/{version}/X_train.csv")
-#                       .columns
-#                       .to_list()
-#                       )
+    st.write("### The Houseprice Predictor Tool for estimating house prices")
 
-#     # load predict tenure files
-#     version = 'v1'
-#     tenure_pipe = load_pkl_file(
-#         f"outputs/ml_pipeline/predict_tenure/{version}/clf_pipeline.pkl")
-#     tenure_labels_map = load_pkl_file(
-#         f"outputs/ml_pipeline/predict_tenure/{version}/label_map.pkl")
-#     tenure_features = (pd.read_csv(f"outputs/ml_pipeline/predict_tenure/{version}/X_train.csv")
-#                        .columns
-#                        .to_list()
-#                        )
+    st.info("Enter the values for the features below to estimate the house price.")
 
-#     # load cluster analysis files
-#     version = 'v1'
-#     cluster_pipe = load_pkl_file(
-#         f"outputs/ml_pipeline/cluster_analysis/{version}/cluster_pipeline.pkl")
-#     cluster_features = (pd.read_csv(f"outputs/ml_pipeline/cluster_analysis/{version}/TrainSet.csv")
-#                         .columns
-#                         .to_list()
-#                         )
-#     cluster_profile = pd.read_csv(
-#         f"outputs/ml_pipeline/cluster_analysis/{version}/clusters_profile.csv")
+    # Load the model pipeline
+    version = 'v1'
+    pipeline_path = f'outputs/ml_pipeline/regression_analysis/{version}/pipeline_best.pkl'
+    houseprice_pipeline = load_pkl_file(pipeline_path)
 
-#     st.write("### Prospect Churnometer Interface")
-#     st.info(
-#         f"* The client is interested in determining whether or not a given prospect will churn. "
-#         f"If so, the client is interested to know when. In addition, the client is "
-#         f"interested in learning from which cluster this prospect will belong in the customer base. "
-#         f"Based on that, present potential factors that could maintain and/or bring  "
-#         f"the prospect to a non-churnable cluster."
-#     )
-#     st.write("---")
+    # Mapping for OverallQual from text to numeric values
+    overall_qual_mapping = {
+        "Very Poor": 1,
+        "Poor": 2,
+        "Fair": 3,
+        "Below Average": 4,
+        "Average": 5,
+        "Above Average": 6,
+        "Good": 7,
+        "Very Good": 8,
+        "Excellent": 9,
+        "Very Excellent": 10
+    }
 
-#     # Generate Live Data
-#     # check_variables_for_UI(tenure_features, churn_features, cluster_features)
-#     X_live = DrawInputsWidgets()
+    # Create input fields for each feature
+    def draw_input_widgets():
+        X_live = pd.DataFrame([], index=[0])  # Create an empty dataframe to store inputs
 
-#     # predict on live data
-#     if st.button("Run Predictive Analysis"):
-#         churn_prediction = predict_churn(
-#             X_live, churn_features, churn_pipe_dc_fe, churn_pipe_model)
+        # User input for each feature
+        overall_qual_label = st.selectbox(
+            'Overall Quality (OverallQual)',
+        options=list(overall_qual_mapping.keys())  # Show the text options in the dropdown
+        )
 
-#         if churn_prediction == 1:
-#             predict_tenure(X_live, tenure_features,
-#                            tenure_pipe, tenure_labels_map)
+        # Map the selected label to the corresponding numeric value
+        X_live['OverallQual'] = overall_qual_mapping[overall_qual_label]
+        X_live['GrLivArea'] = st.number_input('Above ground living area (GrLivArea)', min_value=0, value=1500)
+        X_live['GarageArea'] = st.number_input('Garage Area (GarageArea)', min_value=0, value=500)
+        X_live['YearBuilt'] = st.number_input('Year Built (YearBuilt)', min_value=1800, max_value=2023, value=2000)
+        X_live['TotalBsmtSF'] = st.number_input('Total Basement Area (TotalBsmtSF)', min_value=0, value=1000)
+        X_live['LotArea'] = st.number_input('Lot Area (LotArea)', min_value=0, value=8000)
 
-#         predict_cluster(X_live, cluster_features,
-#                         cluster_pipe, cluster_profile)
+        return X_live
 
+    # Draw input widgets for live prediction
+    X_live = draw_input_widgets()
 
-# def check_variables_for_UI(tenure_features, churn_features, cluster_features):
-#     import itertools
+    # Load the existing pipeline
+    pipeline_path = 'outputs/ml_pipeline/regression_analysis/v1/pipeline_best.pkl'
+    houseprice_pipeline = joblib.load(pipeline_path)
 
-#     # The widgets inputs are the features used in all pipelines (tenure, churn, cluster)
-#     # We combine them only with unique values
-#     combined_features = set(
-#         list(
-#             itertools.chain(tenure_features, churn_features, cluster_features)
-#         )
-#     )
-#     st.write(
-#         f"* There are {len(combined_features)} features for the UI: \n\n {combined_features}")
+    X_live_filtered = X_live[['OverallQual', 'GrLivArea', 'GarageArea', 'YearBuilt', 'TotalBsmtSF', 'LotArea']]
 
+    # Predict on live data when the user clicks the button
+    if st.button("Predict House Price"):
+        # Ensure the correct input features are provided
+        if not X_live.isnull().values.any():
+            prediction = houseprice_pipeline.predict(X_live_filtered)[0]  # Get the prediction
+            st.success(f"The estimated house price is: ${np.round(prediction, 2)}")
+        else:
+            st.error("Please fill in all the fields before predicting.")
 
-# def DrawInputsWidgets():
-
-#     # load dataset
-#     df = load_telco_data()
-#     percentageMin, percentageMax = 0.4, 2.0
-
-# # we create input widgets only for 6 features
-#     col1, col2, col3, col4 = st.beta_columns(4)
-#     col5, col6, col7, col8 = st.beta_columns(4)
-
-#     # We are using these features to feed the ML pipeline - values copied from check_variables_for_UI() result
-
-#     # create an empty DataFrame, which will be the live data
-#     X_live = pd.DataFrame([], index=[0])
-
-#     # from here on we draw the widget based on the variable type (numerical or categorical)
-#     # and set initial values
-#     with col1:
-#         feature = "Contract"
-#         st_widget = st.selectbox(
-#             label=feature,
-#             options=df[feature].unique()
-#         )
-#     X_live[feature] = st_widget
-
-#     with col2:
-#         feature = "InternetService"
-#         st_widget = st.selectbox(
-#             label=feature,
-#             options=df[feature].unique()
-#         )
-#     X_live[feature] = st_widget
-
-#     with col3:
-#         feature = "MonthlyCharges"
-#         st_widget = st.number_input(
-#             label=feature,
-#             min_value=df[feature].min()*percentageMin,
-#             max_value=df[feature].max()*percentageMax,
-#             value=df[feature].median()
-#         )
-#     X_live[feature] = st_widget
-
-#     with col4:
-#         feature = "PaymentMethod"
-#         st_widget = st.selectbox(
-#             label=feature,
-#             options=df[feature].unique()
-#         )
-#     X_live[feature] = st_widget
-
-#     with col5:
-#         feature = "OnlineBackup"
-#         st_widget = st.selectbox(
-#             label=feature,
-#             options=df[feature].unique()
-#         )
-#     X_live[feature] = st_widget
-
-#     with col6:
-#         feature = "PhoneService"
-#         st_widget = st.selectbox(
-#             label=feature,
-#             options=df[feature].unique()
-#         )
-#     X_live[feature] = st_widget
-
-#     # st.write(X_live)
-
-#     return X_live
+# Call the function to load the predictor page
+page_houseprices_predictor_tool_body()
