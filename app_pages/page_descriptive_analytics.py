@@ -75,7 +75,8 @@ def page_descriptive_analytics_body():
     # Heatmap
     if st.checkbox("Correlation Heatmap"):
         st.write(
-            "* Boxes that are lighter green or yellow show more highly correlated variables)")
+            "* Boxes that are lighter green or yellow show more highly correlated variables" 
+            "(the heatmaps may take a moment to load)")
         correlation_heatmap(df)
 
 
@@ -85,14 +86,28 @@ def houseprice_per_variable(df):
                     'OverallQual', 'TotalBsmtSF', 'YearBuilt',
                     'GarageYrBlt']
     palette = sns.color_palette("coolwarm", 10)
-    target_var = df['SalePrice']
-    df_eda = df.filter(vars_to_study + ['SalePrice'])
+    target_var = 'SalePrice'
+    
+    # Ensure the dataframe contains the required variables
+    df_eda = df.filter(vars_to_study + [target_var])
 
     # Defining the label mappings for KitchenQual and OverallQual
-    kitchen_qual_mapping = {4: 'Excellent', 3: 'Good', 2: 'Typical', 1: 'Fair', 0: 'Poor'}
+    kitchen_qual_mapping = {'Ex': 'Excellent', 'Gd': 'Good', 'TA': 'Typical', 'Fa': 'Fair', 'Po': 'Poor'}
     overall_qual_mapping = {1: 'Very Poor', 2: 'Poor', 3: 'Fair', 4: 'Below Average',
                             5: 'Average', 6: 'Above Average', 7: 'Good',
                             8: 'Very Good', 9: 'Excellent', 10: 'Very Excellent'}
+
+    # Creating SalePriceBand for visualisation
+    min_price = df_eda[target_var].min()
+    max_price = df_eda[target_var].max()
+
+    bin_width = (max_price - min_price) / 10
+    bins = [min_price + i * bin_width for i in range(11)]
+    df_eda['SalePriceBand'] = pd.cut(df_eda[target_var], bins=bins, labels=range(10), include_lowest=True)
+
+    # Ensuring full range of categories (even with zero values)
+    kitchen_qual_order = sorted(kitchen_qual_mapping.keys())
+    overall_qual_order = sorted(overall_qual_mapping.keys())
 
     def plot_categorical(df_eda, col, target_var, label_mapping=None, categories_order=None):
         fig, ax = plt.subplots(figsize=(12, 5))  # Create a figure and axis object
@@ -108,19 +123,6 @@ def houseprice_per_variable(df):
         
         st.pyplot(fig)
 
-    # Ensuring full range of categories (even with zero values)
-    kitchen_qual_order = sorted(kitchen_qual_mapping.keys())
-    overall_qual_order = sorted(overall_qual_mapping.keys())
-
-    # Creating SalePriceBand for visualisation
-    min_price = df_eda['SalePrice'].min()
-    max_price = df_eda['SalePrice'].max()
-
-    bin_width = (max_price - min_price) / 10
-    bins = [min_price + i * bin_width for i in range(11)]
-    df_eda['SalePriceBand'] = pd.cut(df_eda['SalePrice'], bins=bins, labels=range(10), include_lowest=True)
-
-
     def plot_numerical(df_eda, col, target_var, label_mapping=None):
         fig, ax = plt.subplots(figsize=(8, 5))
 
@@ -133,16 +135,37 @@ def houseprice_per_variable(df):
 
     def plot_scatter_with_correlation(df_eda, x_col, y_col):
         """Plots scatter plot between two numerical variables with a regression line"""
+        
+        # Ensure that x_col and y_col are passed as column names (strings), not as Series
+        if x_col not in df_eda.columns or y_col not in df_eda.columns:
+            st.error(f"Columns {x_col} and {y_col} must exist in the dataframe.")
+            return
+        
+        # Drop rows where x_col or y_col have NaN values
+        df_clean = df_eda[[x_col, y_col]].dropna()
+
+        # Ensure both columns are numeric
+        if not pd.api.types.is_numeric_dtype(df_clean[x_col]) or not pd.api.types.is_numeric_dtype(df_clean[y_col]):
+            st.error(f"Columns {x_col} and {y_col} must be numeric.")
+            return
+        
         fig, ax = plt.subplots(figsize=(8, 5))
         
-        sns.regplot(data=df_eda, x=x_col, y=y_col, scatter_kws={"s": 20}, line_kws={"color": "red"}, ci=None, ax=ax)
+        # Create a scatter plot with a regression line
+        sns.regplot(data=df_clean, x=x_col, y=y_col, scatter_kws={"s": 20}, line_kws={"color": "red"}, ci=None, ax=ax)
         
-        ax.set_title(f"Scatter Plot of {x_col} vs {y_col}", fontsize=20, y=1.05)
+        # Set the x and y axis labels
+        ax.set_xlabel(x_col, fontsize=12)
+        ax.set_ylabel(y_col, fontsize=12)
         
+        # Set the plot title
+        ax.set_title(f"Scatter Plot of {x_col} vs {y_col}", fontsize=16, y=1.05)
+        
+        # Render the figure in Streamlit
         st.pyplot(fig)
 
     # Visualisation loop
-    target_var = df['SalePrice']
+    target_var = 'SalePrice'
     vars_to_study = ['1stFlrSF', 'GrLivArea', 'KitchenQual',
                     'OverallQual', 'TotalBsmtSF', 'YearBuilt',
                     'GarageYrBlt']
