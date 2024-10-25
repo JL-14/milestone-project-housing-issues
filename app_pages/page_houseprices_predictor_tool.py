@@ -13,7 +13,7 @@ def page_houseprices_predictor_tool_body():
         f"* House 1: **$162,098**\n"
         f"* House 2: **$164,114**\n"
         f"* House 3: **$164,114**\n"
-        f"* House 4: **$184,463.36**\n"
+        f"* House 4: **$184,463**\n"
         f"\nThe client also wanted a tool for predicting the likely houseprice of other properties."
         f" A tool has therefore been provided, enabling the estimation of houseprice based on a smaller"
         f" set of characteristics."
