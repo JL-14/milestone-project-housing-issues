@@ -3,9 +3,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import streamlit as st
 from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
-from src.machine_learning import evaluate_model
-
-
 
 def regression_performance(X_train, y_train, X_test, y_test, pipeline):
     st.write("Model Evaluation\n")
