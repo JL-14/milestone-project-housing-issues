@@ -10,13 +10,13 @@ def page_houseprices_predictor_tool_body():
         f"* The client is interested in determining the likely sale price for 4 inherited houses."
         f"Through using Machine Learning techniques a model was developed to provide estimates,"
         f" and based on the existing data for house prices in Ames, the predicted values houseprices are:\n"
-        f"* House 1: **$171,704.51**\n"
-        f"* House 2: **$178,962.06**\n"
-        f"* House 3: **$194,297.98**\n"
+        f"* House 1: **$162,098**\n"
+        f"* House 2: **$164,114**\n"
+        f"* House 3: **$164,114**\n"
         f"* House 4: **$184,463.36**\n"
         f"\nThe client also wanted a tool for predicting the likely houseprice of other properties."
         f" A tool has therefore been provided, enabling the estimation of houseprice based on a smaller"
-        f"set of characteristics."
+        f" set of characteristics."
     )
     st.write("---")
 
@@ -59,7 +59,6 @@ def page_houseprices_predictor_tool_body():
         X_live['GarageArea'] = st.number_input('Garage Area (GarageArea -Square Feet)', min_value=0, value=0)
         X_live['YearBuilt'] = st.number_input('Year Built (YearBuilt -Square Feet)', min_value=1800, max_value=2023, value=1800)
         X_live['TotalBsmtSF'] = st.number_input('Total Basement Area (TotalBsmtSF -Square Feet)', min_value=0, value=0)
-        X_live['LotArea'] = st.number_input('Lot Area (LotArea -Square Feet)', min_value=0, value=0)
 
         return X_live
 
@@ -70,7 +69,7 @@ def page_houseprices_predictor_tool_body():
     pipeline_path = 'outputs/ml_pipeline/regression_analysis/v1/pipeline_best.pkl'
     houseprice_pipeline = joblib.load(pipeline_path)
 
-    X_live_filtered = X_live[['OverallQual', 'GrLivArea', 'GarageArea', 'YearBuilt', 'TotalBsmtSF', 'LotArea']]
+    X_live_filtered = X_live[['OverallQual', 'GrLivArea', 'GarageArea', 'YearBuilt', 'TotalBsmtSF']]
 
     # Predict on live data when the user clicks the button
     if st.button("Predict House Price"):
