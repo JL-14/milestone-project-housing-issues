@@ -31,16 +31,16 @@ def page_houseprices_predictor_tool_body():
 
     # Mapping for OverallQual from text to numeric values
     overall_qual_mapping = {
-        "Very Poor": 1,
-        "Poor": 2,
-        "Fair": 3,
-        "Below Average": 4,
-        "Average": 5,
-        "Above Average": 6,
-        "Good": 7,
-        "Very Good": 8,
-        "Excellent": 9,
-        "Very Excellent": 10
+        "1. Very Poor": 1,
+        "2. Poor": 2,
+        "3. Fair": 3,
+        "4. Below Average": 4,
+        "5. Average": 5,
+        "6. Above Average": 6,
+        "7. Good": 7,
+        "8. Very Good": 8,
+        "9. Excellent": 9,
+        "10. Very Excellent": 10
     }
 
     # Create input fields for each feature
@@ -49,17 +49,17 @@ def page_houseprices_predictor_tool_body():
 
         # User input for each feature
         overall_qual_label = st.selectbox(
-            'Overall Quality (OverallQual)',
-        options=list(overall_qual_mapping.keys())  # Show the text options in the dropdown
+            'Overall Quality (OverallQual -Select option)',
+        options=list(overall_qual_mapping.keys()) 
         )
 
         # Map the selected label to the corresponding numeric value
         X_live['OverallQual'] = overall_qual_mapping[overall_qual_label]
-        X_live['GrLivArea'] = st.number_input('Above ground living area (GrLivArea)', min_value=0, value=1500)
-        X_live['GarageArea'] = st.number_input('Garage Area (GarageArea)', min_value=0, value=500)
-        X_live['YearBuilt'] = st.number_input('Year Built (YearBuilt)', min_value=1800, max_value=2023, value=2000)
-        X_live['TotalBsmtSF'] = st.number_input('Total Basement Area (TotalBsmtSF)', min_value=0, value=1000)
-        X_live['LotArea'] = st.number_input('Lot Area (LotArea)', min_value=0, value=8000)
+        X_live['GrLivArea'] = st.number_input('Above ground living area (GrLivArea -Square Feet)', min_value=0, value=0)
+        X_live['GarageArea'] = st.number_input('Garage Area (GarageArea -Square Feet)', min_value=0, value=0)
+        X_live['YearBuilt'] = st.number_input('Year Built (YearBuilt -Square Feet)', min_value=1800, max_value=2023, value=1800)
+        X_live['TotalBsmtSF'] = st.number_input('Total Basement Area (TotalBsmtSF -Square Feet)', min_value=0, value=0)
+        X_live['LotArea'] = st.number_input('Lot Area (LotArea -Square Feet)', min_value=0, value=0)
 
         return X_live
 
