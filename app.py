@@ -4,7 +4,7 @@ from app_pages import page_summary
 from app_pages import page_descriptive_analytics
 from app_pages import page_houseprices_predictor_tool
 from app_pages import page_project_hypothesis
-from app_pages import page_regression_original
+from app_pages import page_ml_regression_original
 from app_pages import page_regression_transformed
 
 # Set the page configuration as the first Streamlit command
