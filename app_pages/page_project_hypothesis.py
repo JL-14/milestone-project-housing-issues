@@ -15,7 +15,7 @@ def page_project_hypothesis_body():
     The dataset available for house prices in Ames, Iowa, does not contain information about compatible properties,
     neighbourhood, or the housing market, so the first hypothesis is that:\n
     ---
-    **1)** The Age, Condition, and Size of the house will be the key predictors of house prices from the available dataset.\n
+    **1** - The Age, Condition, and Size of the house will be the key predictors of house prices from the available dataset.\n
     **Validation: True**. Correlation analysis and analysis show that the most important characteristics for predicting
     the value of a house are:\n
     * The overall quality of the house and kitchen (variables: OverallQual, KitchenQual)\n
@@ -23,12 +23,12 @@ def page_project_hypothesis_body():
     (variables: GrLivArea, 1stFlrSF, TotalBsmtSF)\n
     * The year the house and garage was built (variables: YearBuilt, GarageYrBlt)\n
     ---
-    **2)**	The second hypothesis is that based on the first hypothesis it is possible to predict the prices of four
+    **2**	- The second hypothesis is that based on the first hypothesis it is possible to predict the prices of four
     specific houses in Ames, Iowa, using data provided by the client.\n
     **Validation: True**. Based on a regression model developed from the overall dataset of house prices, an estimated
     price has been produced for each of the four properties.\n
     ---
-    **3)**	The third hypothesis is that it is possible to develop a predictor tool, which based on a user inputting the
+    **3** -	The third hypothesis is that it is possible to develop a predictor tool, which based on a user inputting the
     key characteristics identified in the first hypothesis will produce an estimated house price for any house with data
     about the relevant characteristics.\n
     **Validation: True**. Based on the machine learning model developed to answer the first two hypotheses, a tool has

@@ -13,7 +13,7 @@ def page_summary_body():
         f"of the house. Objective characteristics include space in square feet, number"
         f"of bedrooms, etc, whilst subjective include judgment of overall quality and"
         f"condition of the house, quality of the kitchen, etc.\n "
-        f"**Project Dataset**\n"
+        f"\n**Project Dataset**\n"
         f"* The dataset is a publicly available record of 1,460 house sales in Ames, Iowa,"
         f"containing a range of information about each house sold, including"
         f"the sale price. The information available does not provide a complete picture"
@@ -34,10 +34,10 @@ def page_summary_body():
     # copied from README file - "Business Requirements" section
     st.success(
         f"The project has 3 business requirements:\n"
-        f"* **1** - The **client** is interested in discovering how the characteristics of houses correlate with the sale price." 
+        f"* **1** - The **client** is interested in **discovering how the characteristics of houses correlate with the sale price.**" 
         f"Therefore, the client expects data visualisations of the correlated variables against the sale price to show how"
-        f"they are linked.\n"
-        f"* **2** - The client is interested in predicting the house sale price for her four inherited houses.\n"
-        f"* **3** - The client would also like to be able to estimate sale prices for other houses in Ames, Iowa, based on"
-        f"the relevant and pertinent characteristics identified through the Machine Learning process."
+        f" they are linked.\n"
+        f"* **2** - The **client** is interested in **predicting the house sale price for her four inherited houses.**\n"
+        f"* **3** - The **client** would also like to be able to **estimate sale prices for other houses in Ames, Iowa,** based on"
+        f" the relevant and pertinent characteristics identified through the Machine Learning process."
         )

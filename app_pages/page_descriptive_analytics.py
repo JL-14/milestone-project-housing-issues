@@ -15,10 +15,6 @@ def page_descriptive_analytics_body():
 
     st.write("### Descriptive analysis of house sales in Ames, Iowa")
 
-    st.info(
-        f"This is where the descriptive data and correlation/ PPS charts will appear"
-    )
-
     # load data
     df = load_houseprice_data()
 
@@ -27,7 +23,7 @@ def page_descriptive_analytics_body():
                     'OverallQual', 'TotalBsmtSF', 'YearBuilt',
                     'GarageYrBlt']
 
-    st.write("### Churned Customer Study")
+    st.write("### Correlation and Predictive Power Score Study")
     st.info(
         f"* The client is interested in understanding how house saleprice is related to the"
         f"characteristics of a house. A correlation study has therefore been conducted to"

@@ -13,7 +13,7 @@ def load_regression_metrics():
     }
 
 def page_houseprices_predictor_tool_body():
-    st.write("### Houseprice Predictor Interface")
+    st.write("### Houseprice Prediction for Inherited Houses")
     st.info(
         f"* The client is interested in determining the likely sale price for 4 inherited houses."
         f"Through using Machine Learning techniques a model was developed to provide estimates,"

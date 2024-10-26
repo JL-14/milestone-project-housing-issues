@@ -26,7 +26,7 @@ app = MultiPage(app_name= "House Price Predictor") # Create an instance of the a
 
 # Add your app pages here using .add_page()
 app.add_page("Quick Project Summary", page_summary_body)
-app.add_page("House Characteristics Study", page_descriptive_analytics_body)
+app.add_page("Correlation and Predictive Power Score Study", page_descriptive_analytics_body)
 app.add_page("Houseprice Predictor Tool", page_houseprices_predictor_tool_body)
 app.add_page("Project Hypothesis and Validation", page_project_hypothesis_body)
 app.add_page("ML: Regression Model", page_ml_regression_analysis_body)

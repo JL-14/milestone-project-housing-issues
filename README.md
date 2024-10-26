@@ -1,51 +1,10 @@
-# ![CI logo](https://codeinstitute.s3.amazonaws.com/fullstack/ci_logo_small.png)
-
-## Template Instructions
-
-Welcome,
-
-This is the Code Institute student template for the Heritage Housing project option in Predictive Analytics. We have preinstalled all of the tools you need to get started. It's perfectly ok to use this template as the basis for your project submissions. Click the `Use this template` button above to get started.
-
-You can safely delete the Template Instructions section of this README.md file,  and modify the remaining paragraphs for your own project. Please do read the Template Instructions at least once, though! It contains some important information about the IDE and the extensions we use.
-
-## How to use this repo
-
-1. Use this template to create your GitHub project repo
-
-2. Log into the cloud-based IDE with your GitHub account.
-
-3. On your Dashboard, click on the Create button
-
-4. Paste in the URL you copied from GitHub earlier
-
-5. Click Create
-
-6. Wait for the workspace to open. This can take a few minutes.
-
-7. Open a new terminal and `pip3 install -r requirements.txt`
-
-11. Open the jupyter_notebooks directory and click on the notebook you want to open.
-
-12. Click the kernel button and choose Python Environments.
-
-Note that the kernel says Python 3.8.18 as it inherits from the workspace so it will be Python-3.8.18 as installed by our template. To confirm this you can use `! python --version` in a notebook code cell.
-
-## Cloud IDE Reminders
-
-To log into the Heroku toolbelt CLI:
-
-1. Log in to your Heroku account and go to *Account Settings* in the menu under your avatar.
-2. Scroll down to the *API Key* and click *Reveal*
-3. Copy the key
-4. In your Cloud IDE, from the terminal, run `heroku_config`
-5. Paste in your API key when asked
-
-You can now use the `heroku` CLI program - try running `heroku apps` to confirm it works. This API key is unique and private to you so do not share it. If you accidentally make it public then you can create a new one with *Regenerate API Key*.
+# House Predictor Tool for Properties in Ames, Iowa
+## Project Overview
+The Houseprice Predictor Tool is an app developed through using machine learning approaches to analyse and predict houseprices based on a dataset of houseprices in Ames, Iowa, USA. The tool has been developed to meet the requirements of a client looking for an estimated sale price for four inherited properties, and a way to estimate houseprices for other properties. It takes the shape of an on-line app, backed up by descriptive analysis and a machine learning model.
 
 ## Dataset Content
-
-* The dataset is sourced from [Kaggle](https://www.kaggle.com/codeinstitute/housing-prices-data). We then created a fictitious user story where predictive analytics can be applied in a real project in the workplace.
-* The dataset has almost 1.5 thousand rows and represents housing records from Ames, Iowa, indicating house profile (Floor Area, Basement, Garage, Kitchen, Lot, Porch, Wood Deck, Year Built) and its respective sale price for houses built between 1872 and 2010.
+* The dataset is sourced from [Kaggle](https://www.kaggle.com/codeinstitute/housing-prices-data).
+* The dataset consists of 1,460 rows, and represents the characteristics of houses in Ames, Iowa, including house profile (such as Floor Area, Basement, Garage, Kitchen, Lot, Porch, Wood Deck, Year Built) and its respective sale price for houses built between 1872 and 2010.
 
 |Variable|Meaning|Units|
 |:----|:----|:----|
@@ -75,54 +34,166 @@ You can now use the `heroku` CLI program - try running `heroku apps` to confirm 
 |SalePrice|Sale Price|34900 - 755000|
 
 ## Business Requirements
-
-As a good friend, you are requested by your friend, who has received an inheritance from a deceased great-grandfather located in Ames, Iowa, to  help in maximising the sales price for the inherited properties.
-
-Although your friend has an excellent understanding of property prices in her own state and residential area, she fears that basing her estimates for property worth on her current knowledge might lead to inaccurate appraisals. What makes a house desirable and valuable where she comes from might not be the same in Ames, Iowa. She found a public dataset with house prices for Ames, Iowa, and will provide you with that.
-
-* 1 - The client is interested in discovering how the house attributes correlate with the sale price. Therefore, the client expects data visualisations of the correlated variables against the sale price to show that.
-* 2 - The client is interested in predicting the house sale price from her four inherited houses and any other house in Ames, Iowa.
+The client for the app has inherited four houses in Ames, Iowa, and is looking at ways to maximise the sale price for the inherited properties. Understanding which characteristics are most closely linked to house prices, and being able to use these through a bespoke tool will help identify which alterations or modifications will add the most value to the properties, as well as provide an informed estimate of the likely sale price for the houses.
+The particular requirements for the app are:
+* 1 - Identifying how house attributes/ characteristics correlate with sale price with data visualisations of the correlated variables against the sale price to illustrate the relationship between sale price and house characteristics.
+* 2 - The client is interested in predicting the house sale price both from the four specific inherited houses, and also any other house in Ames, Iowa.
 
 ## Hypothesis and how to validate?
-
-1. A machine learning model will be able to predict house prices in Ames, Iowa, based on information from a historic dataset of house sales in Ames.
-- Validation: This hypothesis will be validated by the training of a machine learning model, using different logarithms and hyperparameters to achieve an acceptable outcome.
-2. Based on available literature, the factors in the dataset most likely to affect house prices are:
-* house age, 
-* size (in terms of number of bedrooms and overall square fottage), 
-* house condition
-* quality of build
-Accordingly, these are the variables expected to have the greatest predictive value in the current set.
-- Validation: Predictive Power Scores and Principal Component Analysis will be used to establish the predictive power of variables.
-3. As considerable factors affecting house values are not included in the available dataset (relating to location, neighbourhood, and wider macro-economic factors), we expect there to be considerable amounts of variance that cannot be accounted for.
-- Validation: Mean Average Variance scores
+ Based on information from the credit checking agency Experian (https://www.experian.com/blogs/ask-experian/factors-that-affect-home-value/), the five factors that most affect a home’s value are: 
+•	Prices of Compatible Properties
+•	The Neighbourhood
+•	The Home’s Age and Condition
+•	the Property Size
+•	the State of the Housing Market.
+The dataset available for house prices in Ames, Iowa, does not contain information about compatible properties, neighbourhood, or the housing market, so the first hypothesis is that the age, condition, and size of the house will be the key predictors of house prices from the available dataset.
+- Validation: A correlations study with a Predictive Power Score (PPS) element will be used to examine the relationship between features/ characteristics and sale price, identifying the most salient characteristics of a house/ property.
+2. The second hypothesis is that based on the identified key characteristics it is possible to predict the prices of four specific houses in Ames, Iowa, using data provided by the client for house prices in the area.
+-Validation: Based on a regression model developed from the overall dataset of house prices, an estimated sale price can been produced for each of the four properties.
+3. The third hypothesis is that a machine learning model will be able to predict the price of any house in Ames, Iowa, based on information from a historic dataset of house sales in Ames.
+- Validation: This hypothesis will be validated by the training of a machine learning model, using different logarithms and hyperparameters to achieve the outcome of an accurate prediction tool (with R2 performance scores of no less than 0.75).
 
 ## The rationale to map the business requirements to the Data Visualisations and ML tasks
+* Business Requirement 1: Data Visualization and Correlation study
+•	The relationship between the variables in the dataset, and importantly with the target variable (sale price), can be effectively established through correlation (using both Spearman and Pearson) and predictive power score analysis (PPS).
+•	The results of the correlation and PPS analysis can be reported both numerically and visually (using a mixture of scatter plots, bar charts, and heatmaps) to give the client a full overview.
 
-* Business Requirement 1: Classification, Regression, Cluster and Data Analysis
-- To predict sales price, a categorical outcome variable will be constructed dividing predicted sales prices into bands.
-- A regression model will be used to predict absolute house price, or a categorical variable of sales price bands will be used in a classification model if performance of the regression model is inadequate.
-- Dataset house sales will be clustered according to the most important variables to predict the house price group to which any given house will belong (based on its characteristics).
-* Business Requirement 2: Data Visualisation and Custom User Interface
-- Using the most accurate ML model possible, a set of data visualisations (scatterplots, bar charts, and heat maps) will be presented to assist in the valuation of the user's existing houses.
--An interactive interface in the form of a dashboard will be constructed to assist in the valuation.
-
+* Business Requirement 2: Predicted sale prices for four inherited houses
+•	A machine learning model of sale prices based on key characteristics will be trained through identifying a range of logarithms and hyperparameters, and using several different models (including regression analysis, regression with principal component analysis, and a classification model).
+•	These will be applied to the dataset as a whole (with fewer transformations applied prior to training) and on a dataset that has undergone substantial transformation prior to training to address variation, distribution, and missing values in the dataset.
+•	As part of the machine learning process, the most important features for predicting house prices will be identified (through assessing feature importance). This analysis is not the same as the correlation and PPS analysis (which examines relationships between features rather than contribution to the machine learning model).
+•	The machine learning model will enable the prediction of the house prices of the four specific properties, and will be produced as a predicted number with a range based on the 95% confidence interval attached to the figure.
+* Business Requirement 3: A tool to predict house prices of other properties in Ames, Iowa
+•	A Household Prediction Tool will be developed from the machine learning analysis, whereby based on the best fitting model and the features identified as most important, the user will be able to enter certain key characteristics into a tool and produce a predicted house price for any property in Ames, Iowa.
+•	The Houseprice Predictor Tool will be deployed and hosted on Heroku.
 
 ## ML Business Case
-
-* In the previous bullet, you potentially visualised an ML task to answer a business requirement. You should frame the business case using the method we covered in the course.
+Houseprice Predictor
+Regression Model with full dataset
+•	In order to develop a machine learning model to predict houseprices, a regression model will be built to be trained on a supervised dataset with a continuous numeric target variable.
+•	The dataset has 1,460 records of house prices with associated characteristics.
+•	The dataset which will be used will not have undergone extensive feature engineering prior to the training, other than the removal of missing values and non-valid data (such as where data has been defaulted to the lowest value in the dataset, leading to distortion of the distribution of data).
+•	The success metric for the regression analysis will be:
+o	At least 0.75 R2 scores both for the Train and Test Set.
+•	The output is an identified model with hyperparameters and feature engineering steps.
+•	There will also be an assessment of feature importance, to identify the features that account for the most variance in the dataset.
+•	The outcome of the analysis is a predicted sale price, with 95% confidence intervals in order to produce a range.
+•	The target for the model is SalePrice, with all features present except EnclosedPorch and WoodDeckSF, both of which have more than 80% missing data.
+Regression Model with full dataset and Principal Component Analysis
+•	A second machine learning model will be built to predict houseprices, consisting of a regression model with a Principal Component Analysis (PCA) element. This will be built to be trained on a supervised dataset with a continuous numeric target variable.
+•	The dataset has 1,460 records of house prices with associated characteristics.
+•	The dataset which will be used will not have undergone extensive feature engineering prior to the training, other than the removal of missing values and non-valid data (such as where data has been defaulted to the lowest value in the dataset, leading to distortion of the distribution of data).
+•	The success metric for the regression analysis with PCA will be:
+o	At least 0.75 R2 scores both for the Train and Test Set.
+•	The output is an identified model with hyperparameters and feature engineering steps.
+•	The outcome of the analysis is a predicted sale price, with 95% confidence intervals in order to produce a range.
+•	The target for the model is SalePrice, with all features present except EnclosedPorch and WoodDeckSF, both of which have more than 80% missing data.
+Classification Model
+•	A technique to convert the ML task from Regression to Classification was employed in addition to the regression analysis for use with the full dataset. The continuous numerical target (SalePrice) with a range from 34,900-755,000 was recoded into a new feature with 4 bands: '129,975 and under', '129,975 to 163,000', '163,000 to 214,000', and '214,000 and over'.
+•	As a result the target is categorical and contains 4 classes. This was used to develop a classification model, which is supervised and uni-dimensional.
+•	The target for the model is a categorised feature SalePrice, with all features present except EnclosedPorch and WoodDeckSF, both of which have more than 80% missing data.
+•	The model performance is measured with recall, precision, and f1-scores.
+•	The model success metrics are:
+o	At least 0.75 Recall on train and test set
+•	The outcome of the analysis is a predicted sale price band.
+Regression Model with most important features only
+•	In order to develop a machine learning model to predict houseprices, a regression model will be built to be trained on a supervised dataset with a continuous numeric target variable.
+•	The dataset has 1,460 records of house prices with associated characteristics.
+•	The dataset which will be used will not have undergone extensive feature engineering prior to the training, other than the removal of missing values and non-valid data (such as where data has been defaulted to the lowest value in the dataset, leading to distortion of the distribution of data).
+•	The features included in the analysis were those identified through feature importance analysis of the full dataset:
+o	OverallQual
+o	GrLivArea
+o	TotalBsmtSF
+o	GarageArea
+o	YearBuilt
+•	The success metric for the regression analysis will be:
+o	At least 0.75 R2 scores both for the Train and Test Set.
+•	The output is an identified model with hyperparameters and feature engineering steps.
+•	The outcome of the analysis is a predicted sale price, with 95% confidence intervals in order to produce a range.
+•	The target for the model is SalePrice, with only the selected features present.
+Regression Model with feature engineered dataset
+•	In order to develop a machine learning model to predict houseprices, a regression model will be built to be trained on a supervised and feature engineered dataset with a continuous numeric target variable.
+•	The dataset has 1,460 records of house prices with associated characteristics.
+•	The dataset which will be used will be used for the regression model with feature engineered dataset has undergone a range of transformations before being trained with appropriate models and hyperparameters. The feature engineering techniques employed are:
+o	Winsorization: To address outliers affecting the overall distribution of the data. Applied to:
+	1stFlrSF
+	2ndFlrSF
+	BsmtFinSF1
+	BsmtUnfSF
+	GarageArea
+	GrLivArea
+	LotArea
+	LotFrontage
+	MasVnrArea
+	OpenPorchSF
+	TotalBsmtSF
+o	Power transformations: To address non-normal distribution of data, applied to:
+	1stFlrSF
+	GrLivArea
+	MasVnrArea
+o	Box Cox transformations: To address non-normal distribution of data, applied to:
+	BsmtFinSF1
+	BsmtUnfSF
+	GarageArea
+	OpenPorchSF
+o	SmartCorrelation: To identify variables that are strongly collinear with other variables, leading to the dropping of:
+	1stFlrSF
+	GarageYrBlt
+	YearBuilt
+•	The success metric for the regression analysis analysis with feature engineered features will be:
+o	At least 0.75 R2 scores both for the Train and Test Set.
+•	The output is an identified model with hyperparameters and feature engineering steps.
+•	The outcome of the analysis is a predicted sale price, with 95% confidence intervals in order to produce a range.
+o	The target for the model is SalePrice, with feature engineered variables except EnclosedPorch, WoodDeckSF (both of which were excluded due to over 80% of data missing), 1stFlrSF, GarageYrBlt, and YearBuilt.
 
 ## Dashboard Design
+### Page 1: Quick project summary
+- Quick project summary
+    - Project Terms & Jargon
+    - Describe Project Dataset
+    - State Business Requirements
 
-* List all dashboard pages and their content, either blocks of information or widgets, like buttons, checkboxes, images, or any other items that your dashboard library supports.
-* Eventually, during the project development, you may revisit your dashboard plan to update a given feature (for example, at the beginning of the project you were confident you would use a given plot to display an insight but eventually you needed to use another plot type)
+### Page 2: Correlation and Predictive Power Score Study
+- Overview of business requirement answered 
+    	- Checkbox to inspect the full dataset (first 10 rows)
+- Statement of variables found to be most strongly correlated with the target feature (SalePrice)
+    	- Checkbox: Individual plots showing the distribution of SalePrice for each correlated variable 
+    	- Checkbox: Heatmap showing the correlations (Spearman and Pearson) between all features, and predictive power score heatmap showing the strength of the predictive power between features 
+
+### Page 3: Houseprice Predictor Tool
+- State business requirement 2 and 3
+- Provide predicted house prices for the 4 inherited houses
+- 5 widget inputs, which relates to the most important features for predicting house price:
+- Overall Quality
+- Year Built
+- Above Ground Living Area
+- Total Basement Area
+- Garage Area
+- "Predict House Price" button that serves the input data to the ML pipeline and predicts the house price with 95% confidence intervals providing a range.
+
+### Page 4: Project Hypothesis and Validation
+- Overview of factors generally known to affect house prices, and introduction to three hypotheses:
+1 - The Age, Condition, and Size of the house will be the key predictors of house prices from the available dataset.    
+Validation: True. Correlation analysis and analysis show that the most important characteristics for predicting the value of a house are:
+•	The overall quality of the house and kitchen (variables: OverallQual, KitchenQual)
+•	The size of the living area above ground, 1st floor square feet, and basement size (square feet) (variables: GrLivArea, 1stFlrSF, TotalBsmtSF)
+•	The year the house and garage was built (variables: YearBuilt, GarageYrBlt)
+2 - The second hypothesis is that based on the first hypothesis it is possible to predict the prices of four specific houses in Ames, Iowa, using data provided by the client.
+ Validation: True. Based on a regression model developed from the overall dataset of house prices, an estimated price has been produced for each of the four properties.
+3 - The third hypothesis is that it is possible to develop a predictor tool, which based on a user inputting the key characteristics identified in the first hypothesis will produce an estimated house price for any house with data about the relevant characteristics.
+Validation: True. Based on the machine learning model developed to answer the first two hypotheses, a tool has been produced which will provide an estimated house price for any house based on its key characteristics.
+
+### Page 5: ML: Regression Model
+- Description of the models trained for the tools and which one was chosen
+- Chosen ML pipeline steps
+- Feature importance
+- Pipeline performance metrics
 
 ## Unfixed Bugs
-
-* You will need to mention unfixed bugs and why they were not fixed. This section should include shortcomings of the frameworks or technologies used. Although time can be a big variable to consider, paucity of time and difficulty understanding implementation is not valid reason to leave bugs unfixed.
+•	There is a bug wherebyrepeated entries in the Houseprice Predictor Tool redirects the user back to the Summary Page
+•	There is a bug whereby the Summary Page also displays the Houseprice Predictor Tool on loading (and after redirect)
 
 ## Deployment
-
 ### Heroku
 
 * The App live link is: <https://YOUR_APP_NAME.herokuapp.com/>
@@ -137,27 +208,38 @@ Accordingly, these are the variables expected to have the greatest predictive va
 6. If the slug size is too large then add large files not required for the app to the .slugignore file.
 
 ## Main Data Analysis and Machine Learning Libraries
-
-* Here you should list the libraries you used in the project and provide example(s) of how you used these libraries.
+The machine learning libraries used during this project were:
+•	Python -The programming language employed throughout the project
+•	Jupyter -Provided the infrastructure for the project through Jupyter Notebooks
+•	Pandas -Data analysis and manipulation library, used to format and analyse dataframes throughout the project
+•	Numpy -Used for data analysis and feature engineering throughout the project, such as in the pipeline and hyperparameter searches and in lambda functions
+•	Matplotlib -Visualisation library used for the production of charts and visualisation throughout the project
+•	Seaborn -A statistical data library for data visualisation, used to produce bar charts, scatter plots and other visualisations
+•	Streamlit -Used to develop the App for the project, with inbuilt styles and formatting features
+•	Joblib -Used for pipelining, especially linking the app and the sources (datasets and pipelines/ pkl-files)
+•	ydata_profiling -A library used to produce quick data summaries for data, primarily used in the data cleaning and feature engineering notebooks to provide a comprehensive overview of the data
+•	feature_engine – Used as part of the feature-engineering process, providing functions for engineering and transforming data
+•	Scikit-learn -Used for predictive data analysis, especially as part of the model pipelining to explore the most suitable models for the dataset (especially in the regression analysis and modelling notebooks)
 
 ## Credits
-
-* In this section, you need to reference where you got your content, media and extra help from. It is common practice to use code from other repositories and tutorials, however, it is important to be very specific about these sources to avoid plagiarism.
-* You can break the credits section up into Content and Media, depending on what you have included in your project.
-
 ### Content
+* The layout of the Streamlit app was inspired by the Code Institute Churnometer Walkthrough project
+* The information about factors generally considered linked to house prices was from Experian (https://www.experian.com/blogs/ask-experian/factors-that-affect-home-value/)
+* Background information about Ames, Iowa, was sourced from the official Ames, Iowa website (https://www.cityofames.org/home) 
+* The dataset used was sourced from Kaggle (https://www.kaggle.com/datasets/codeinstitute/housing-prices-data?resource=download)
 
-* The text for the Home page was taken from Wikipedia Article A
-* Instructions on how to implement form validation on the Sign-Up page was taken from [Specific YouTube Tutorial](https://www.youtube.com/)
-* The icons in the footer were taken from [Font Awesome](https://fontawesome.com/)
+### Code
 
-### Media
+* Custom code snippets were provided by Code Institute (such as PipelineOptimization, HyperparameterOptimization, DataCleaningEffect, DisplayCorrAndPPS, FeatureEngineeringAnalysis), all adapted by me for the project.
+* The coders of the world assisted with hints and pointers from other queries on StackOverflow and Reddit
+* ChatGPT was used to solve particularly tricky aspects of the code, especially when the ordering of variables for the App became an issue.
+* A number of books were consulted to aid the development of the code and project, including:
+•	Muller, A. C. & Guido, S. (2018): Introduction to Machine Learning with Python. O’Reilly Media.
+•	Huyen, C. (2022): Designing Machine Learning Systems. O’Reilly Media.
+•	Nelson, H. (2023): Essential Math for AI. O’Reilly Media.
+•	Ozoemena, S. (2022): Machine Learning Explained the Simple Way. Simple Code Publishing.
 
-* The photos used on the home and sign-up page are from This Open Source site
-* The images used for the gallery page were taken from this other open-source site
+## Acknowledgements
+* A huge thank you goes to my wife, Joanne Lovbakke, for her unwavering support throughout the project.
 
-## Acknowledgements (optional)
-
-
-* In case you would like to thank the people that provided support through this project.
 
