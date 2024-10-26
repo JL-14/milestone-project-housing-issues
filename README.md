@@ -234,14 +234,15 @@ The machine learning libraries used during this project were:
 
 ### Code
 
-* Custom code snippets were provided by Code Institute (such as PipelineOptimization, HyperparameterOptimization, DataCleaningEffect, DisplayCorrAndPPS, FeatureEngineeringAnalysis), all adapted by me for the project.
+* The code used was very much inspired by the content of the Code Institue Predictive Analytics learning module, and in particular the Churnometer walkthrough project
+* Custom code snippets were provided by Code Institute (such as PipelineOptimization, HyperparameterOptimization, DataCleaningEffect, DisplayCorrAndPPS, FeatureEngineeringAnalysis), all adapted by me for the project
 * The coders of the world assisted with hints and pointers from other queries on StackOverflow and Reddit
-* ChatGPT was used to solve particularly tricky aspects of the code, especially when the ordering of variables for the App became an issue.
+* ChatGPT was used to solve particularly tricky aspects of the code, especially when the ordering of variables for the App became an issue
 * A number of books were consulted to aid the development of the code and project, including:
-    - Muller, A. C. & Guido, S. (2018): Introduction to Machine Learning with Python. O’Reilly Media.
-    - Huyen, C. (2022): Designing Machine Learning Systems. O’Reilly Media.
-    - Nelson, H. (2023): Essential Math for AI. O’Reilly Media.
-    - Ozoemena, S. (2022): Machine Learning Explained the Simple Way. Simple Code Publishing.
+    - Muller, A. C. & Guido, S. (2018): Introduction to Machine Learning with Python. O’Reilly Media
+    - Huyen, C. (2022): Designing Machine Learning Systems. O’Reilly Media
+    - Nelson, H. (2023): Essential Math for AI. O’Reilly Media
+    - Ozoemena, S. (2022): Machine Learning Explained the Simple Way. Simple Code Publishing
 
 ## Acknowledgements
 * A huge thank you goes to my wife, Joanne Lovbakke, for her unwavering support throughout the project.
