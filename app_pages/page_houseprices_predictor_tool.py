@@ -2,18 +2,29 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import joblib
+from sklearn.metrics import mean_absolute_error, mean_squared_error
 from src.data_management import load_pkl_file
+
+# Load model performance metrics from regression evaluation
+def load_regression_metrics():
+    return {
+        "MAE": 23102.253,
+        "RMSE": 40308.223
+    }
 
 def page_houseprices_predictor_tool_body():
     st.write("### Houseprice Predictor Interface")
     st.info(
         f"* The client is interested in determining the likely sale price for 4 inherited houses."
         f"Through using Machine Learning techniques a model was developed to provide estimates,"
-        f" and based on the existing data for house prices in Ames, the predicted values houseprices are:\n"
-        f"* House 1: ** $128,066**\n"
-        f"* House 2: **$154,096**\n"
-        f"* House 3: **$184,205**\n"
-        f"* House 4: **$182,390**\n"
+        f" and based on the existing data for house prices in Ames. The Houseprice"
+        f" Predictor Tool produces a main estimate, and shows the range within which"
+        f" we can be 95% certain that the actual price will fall (95% Confidence Interval).\n"
+        f" The houseprice predictions for the inherited houses are:\n"
+        f"* House 1: ** $128065.75** (95% CI: $82,785.33 - $173,346.16)\n"
+        f"* House 2: **$154,095.91** (95% CI: $108,815.49 - $199,376.32)\n"
+        f"* House 3: **$184,205.29** (95% CI: $138,924.87 - $229,485.70)\n"
+        f"* House 4: ** $182,389.97** (95% CI: $137,109.55 - $227,670.38)\n"
         f"\nThe client also wanted a tool for predicting the likely houseprice of other properties."
         f" A tool has therefore been provided, enabling the estimation of houseprice based on a smaller"
         f" set of characteristics."
@@ -56,8 +67,8 @@ def page_houseprices_predictor_tool_body():
         X_live['OverallQual'] = overall_qual_mapping[overall_qual_label]
         X_live['YearBuilt'] = st.number_input('Year Built (YearBuilt -Square Feet)', min_value=1800, max_value=2023, value=1800)
         X_live['GrLivArea'] = st.number_input('Above ground living area (GrLivArea -Square Feet)', min_value=0, value=0)
-        X_live['GarageArea'] = st.number_input('Garage Area (GarageArea -Square Feet)', min_value=0, value=0)
-        X_live['TotalBsmtSF'] = st.number_input('Total Basement Area (TotalBsmtSF -Square Feet)', min_value=0, value=0)    
+        X_live['TotalBsmtSF'] = st.number_input('Total Basement Area (TotalBsmtSF -Square Feet)', min_value=0, value=0)
+        X_live['GarageArea'] = st.number_input('Garage Area (GarageArea -Square Feet)', min_value=0, value=0) 
 
         return X_live
 
@@ -67,18 +78,24 @@ def page_houseprices_predictor_tool_body():
     # Ensure input features are in the correct order
     X_live_filter = X_live[['GarageArea', 'GrLivArea', 'OverallQual', 'TotalBsmtSF', 'YearBuilt']]
 
-    # X_train = pd.read_csv(
-    #     f"outputs/ml_pipeline/regression_analysis/{version}/X_train.csv")
-    # st.write("Pipeline Expected Features:", X_train.columns.tolist())
-    # st.write("User Input Data for Prediction:")
-    # st.write(X_live_filter)
+    # Load model performance metrics
+    metrics = load_regression_metrics()
+    mae = metrics["MAE"]
 
     # Predict on live data when the user clicks the button
     if st.button("Predict House Price"):
         # Ensure no missing values
         if not X_live_filter.isnull().values.any():
             prediction = houseprice_pipeline.predict(X_live_filter)[0]  # Get the prediction
-            st.success(f"The estimated house price is: ${np.round(prediction, 2)}")
+
+            # Calculate 95% confidence interval based on MAE
+            lower_bound = prediction - 1.96 * mae
+            upper_bound = prediction + 1.96 * mae
+
+            st.success(
+                f"The estimated house price is: **${np.round(prediction, 2):,}** "
+                f"(95% CI: ${np.round(lower_bound, 2):,} - ${np.round(upper_bound, 2):,})"
+            )
         else:
             st.error("Please fill in all the fields before predicting.")
 
