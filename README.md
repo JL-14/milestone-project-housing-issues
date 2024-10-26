@@ -79,7 +79,7 @@ The dataset available for house prices in Ames, Iowa, does not contain informati
     - The output is an identified model with hyperparameters and feature engineering steps.
     - There will also be an assessment of feature importance, to identify the features that account for the most variance in the dataset.
     - The outcome of the analysis is a predicted sale price, with 95% confidence intervals in order to produce a range.
-    - The target for the model is SalePrice, with all features present except EnclosedPorch and WoodDeckSF, both of which have more than 80% missing data.
+- The target for the model is SalePrice, with all features present except EnclosedPorch and WoodDeckSF, both of which have more than 80% missing data.
 #### Regression Model with full dataset and Principal Component Analysis
 - A second machine learning model will be built to predict houseprices, consisting of a regression model with a Principal Component Analysis (PCA) element. This will be built to be trained on a supervised dataset with a continuous numeric target variable.
 - The dataset has 1,460 records of house prices with associated characteristics.
@@ -96,7 +96,7 @@ The dataset available for house prices in Ames, Iowa, does not contain informati
 - The model performance is measured with recall, precision, and f1-scores.
 - The model success metrics are:
     - At least 0.75 Recall on train and test set
-- The outcome of the analysis is a predicted sale price band.
+    - The outcome of the analysis is a predicted sale price band.
 #### Regression Model with most important features only
 - In order to develop a machine learning model to predict houseprices, a regression model will be built to be trained on a supervised dataset with a continuous numeric target variable.
 - The dataset has 1,460 records of house prices with associated characteristics.
@@ -108,9 +108,9 @@ The dataset available for house prices in Ames, Iowa, does not contain informati
     - GarageArea
     - YearBuilt
 - The success metric for the regression analysis will be:
-- At least 0.75 R2 scores both for the Train and Test Set.
-- The output is an identified model with hyperparameters and feature engineering steps.
-- The outcome of the analysis is a predicted sale price, with 95% confidence intervals in order to produce a range.
+    - At least 0.75 R2 scores both for the Train and Test Set.
+    - The output is an identified model with hyperparameters and feature engineering steps.
+    - The outcome of the analysis is a predicted sale price, with 95% confidence intervals in order to produce a range.
 - The target for the model is SalePrice, with only the selected features present.
 #### Regression Model with feature engineered dataset
 - In order to develop a machine learning model to predict houseprices, a regression model will be built to be trained on a supervised and feature engineered dataset with a continuous numeric target variable.
@@ -143,8 +143,8 @@ The dataset available for house prices in Ames, Iowa, does not contain informati
         - YearBuilt
 - The success metric for the regression analysis analysis with feature engineered features will be:
     - At least 0.75 R2 scores both for the Train and Test Set.
-- The output is an identified model with hyperparameters and feature engineering steps.
-- The outcome of the analysis is a predicted sale price, with 95% confidence intervals in order to produce a range.
+    - The output is an identified model with hyperparameters and feature engineering steps.
+    - The outcome of the analysis is a predicted sale price, with 95% confidence intervals in order to produce a range.
 - The target for the model is SalePrice, with feature engineered variables except EnclosedPorch, WoodDeckSF (both of which were excluded due to over 80% of data missing), 1stFlrSF, GarageYrBlt, and YearBuilt.
 
 ## Dashboard Design
@@ -174,14 +174,17 @@ The dataset available for house prices in Ames, Iowa, does not contain informati
 
 ### Page 4: Project Hypothesis and Validation
 - Overview of factors generally known to affect house prices, and introduction to three hypotheses:
-1. The Age, Condition, and Size of the house will be the key predictors of house prices from the available dataset.    
+1. The Age, Condition, and Size of the house will be the key predictors of house prices from the available dataset.
+
 **Validation: True.** Correlation analysis and analysis show that the most important characteristics for predicting the value of a house are:
-- The overall quality of the house and kitchen (variables: OverallQual, KitchenQual)
-- The size of the living area above ground, 1st floor square feet, and basement size (square feet) (variables: GrLivArea, 1stFlrSF, TotalBsmtSF)
-- The year the house and garage was built (variables: YearBuilt, GarageYrBlt)
+    - The overall quality of the house and kitchen (variables: OverallQual, KitchenQual)
+    - The size of the living area above ground, 1st floor square feet, and basement size (square feet) (variables: GrLivArea, 1stFlrSF, TotalBsmtSF)
+    - The year the house and garage was built (variables: YearBuilt, GarageYrBlt)
 2. The second hypothesis is that based on the first hypothesis it is possible to predict the prices of four specific houses in Ames, Iowa, using data provided by the client.
+
 **Validation: True.** Based on a regression model developed from the overall dataset of house prices, an estimated price has been produced for each of the four properties.
 3. The third hypothesis is that it is possible to develop a predictor tool, which based on a user inputting the key characteristics identified in the first hypothesis will produce an estimated house price for any house with data about the relevant characteristics.
+
 **Validation: True.** Based on the machine learning model developed to answer the first two hypotheses, a tool has been produced which will provide an estimated house price for any house based on its key characteristics.
 
 ### Page 5: ML: Regression Model
@@ -191,7 +194,7 @@ The dataset available for house prices in Ames, Iowa, does not contain informati
 - Pipeline performance metrics
 
 ## Unfixed Bugs
-- There is a bug wherebyrepeated entries in the Houseprice Predictor Tool redirects the user back to the Summary Page
+- There is a bug whereby repeated entries in the Houseprice Predictor Tool redirects the user back to the Summary Page
 - There is a bug whereby the Summary Page also displays the Houseprice Predictor Tool on loading (and after redirect)
 
 ## Deployment
