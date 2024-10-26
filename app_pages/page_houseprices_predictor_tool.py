@@ -10,10 +10,10 @@ def page_houseprices_predictor_tool_body():
         f"* The client is interested in determining the likely sale price for 4 inherited houses."
         f"Through using Machine Learning techniques a model was developed to provide estimates,"
         f" and based on the existing data for house prices in Ames, the predicted values houseprices are:\n"
-        f"* House 1: **$162,098**\n"
-        f"* House 2: **$164,114**\n"
-        f"* House 3: **$164,114**\n"
-        f"* House 4: **$184,463**\n"
+        f"* House 1: ** $128,066**\n"
+        f"* House 2: **$154,096**\n"
+        f"* House 3: **$184,205**\n"
+        f"* House 4: **$182,390**\n"
         f"\nThe client also wanted a tool for predicting the likely houseprice of other properties."
         f" A tool has therefore been provided, enabling the estimation of houseprice based on a smaller"
         f" set of characteristics."
@@ -21,7 +21,6 @@ def page_houseprices_predictor_tool_body():
     st.write("---")
 
     st.write("### The Houseprice Predictor Tool for estimating house prices")
-
     st.info("Enter the values for the features below to estimate the house price.")
 
     # Load the model pipeline
@@ -55,27 +54,30 @@ def page_houseprices_predictor_tool_body():
 
         # Map the selected label to the corresponding numeric value
         X_live['OverallQual'] = overall_qual_mapping[overall_qual_label]
+        X_live['YearBuilt'] = st.number_input('Year Built (YearBuilt -Square Feet)', min_value=1800, max_value=2023, value=1800)
         X_live['GrLivArea'] = st.number_input('Above ground living area (GrLivArea -Square Feet)', min_value=0, value=0)
         X_live['GarageArea'] = st.number_input('Garage Area (GarageArea -Square Feet)', min_value=0, value=0)
-        X_live['YearBuilt'] = st.number_input('Year Built (YearBuilt -Square Feet)', min_value=1800, max_value=2023, value=1800)
-        X_live['TotalBsmtSF'] = st.number_input('Total Basement Area (TotalBsmtSF -Square Feet)', min_value=0, value=0)
+        X_live['TotalBsmtSF'] = st.number_input('Total Basement Area (TotalBsmtSF -Square Feet)', min_value=0, value=0)    
 
         return X_live
 
     # Draw input widgets for live prediction
     X_live = draw_input_widgets()
 
-    # Load the existing pipeline
-    pipeline_path = 'outputs/ml_pipeline/regression_analysis/v1/pipeline_best.pkl'
-    houseprice_pipeline = joblib.load(pipeline_path)
+    # Ensure input features are in the correct order
+    X_live_filter = X_live[['GarageArea', 'GrLivArea', 'OverallQual', 'TotalBsmtSF', 'YearBuilt']]
 
-    X_live_filtered = X_live[['OverallQual', 'GrLivArea', 'GarageArea', 'YearBuilt', 'TotalBsmtSF']]
+    # X_train = pd.read_csv(
+    #     f"outputs/ml_pipeline/regression_analysis/{version}/X_train.csv")
+    # st.write("Pipeline Expected Features:", X_train.columns.tolist())
+    # st.write("User Input Data for Prediction:")
+    # st.write(X_live_filter)
 
     # Predict on live data when the user clicks the button
     if st.button("Predict House Price"):
-        # Ensure the correct input features are provided
-        if not X_live.isnull().values.any():
-            prediction = houseprice_pipeline.predict(X_live_filtered)[0]  # Get the prediction
+        # Ensure no missing values
+        if not X_live_filter.isnull().values.any():
+            prediction = houseprice_pipeline.predict(X_live_filter)[0]  # Get the prediction
             st.success(f"The estimated house price is: ${np.round(prediction, 2)}")
         else:
             st.error("Please fill in all the fields before predicting.")
