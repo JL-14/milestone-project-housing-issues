@@ -34,10 +34,22 @@ The Houseprice Predictor Tool is an app developed through using machine learning
 |SalePrice|Sale Price|34900 - 755000|
 
 ## Business Requirements
-The client for the app has inherited four houses in Ames, Iowa, and is looking at ways to maximise the sale price for the inherited properties. Understanding which characteristics are most closely linked to house prices, and being able to use these through a bespoke tool will help identify which alterations or modifications will add the most value to the properties, as well as provide an informed estimate of the likely sale price for the houses.
-The particular requirements for the app are:
-* 1 - Identifying how house attributes/ characteristics correlate with sale price with data visualisations of the correlated variables against the sale price to illustrate the relationship between sale price and house characteristics.
-* 2 - The client is interested in predicting the house sale price both from the four specific inherited houses, and also any other house in Ames, Iowa.
+The client for the app has inherited four houses in Ames, Iowa, and is looking at ways to maximise the sale price for the inherited properties. Understanding which characteristics are most closely linked to house prices, and being able to use these through a bespoke tool will help identify which alterations or modifications will add the most value to the properties, as well as provide an informed estimate of the likely sale price for the houses.The particular requirements for the app are:
+The project has 3 business requirements:
+        
+- **1** - The **client** is interested in discovering how the characteristics  
+of houses correlate with the sale price. Therefore, the client expects data visualizations of the 
+correlated variables against the sale price to show how they are linked.
+*User Story: As a client, I want to be able to tell from the analysis which house characteristics are most strongly correlated with houseprices, so that I can make informed choices about what determines the value of houses I own.*
+
+- **2** - The **client** is interested in predicting the house sale price  
+for her four inherited houses.
+*User Story: As a client, I want to be able to tell from the analysis how much my houses are worth, so that I can make informed decisions when selling the houses.*
+
+- **3** - The **client** would also like to be able to estimate sale prices  
+for other houses in Ames, Iowa, based on the relevant and pertinent 
+characteristics identified through the Machine Learning process.
+*User Story: As a client, I want to be able to a tool to predict houseprices in Ames, Iowa, based on a set of characteristics, so that I can know what properties in the town are worth.*
 
 ## Hypothesis and how to validate?
  Based on information from the credit checking agency Experian (https://www.experian.com/blogs/ask-experian/factors-that-affect-home-value/), the five factors that most affect a home’s value are: 
@@ -64,6 +76,7 @@ The dataset available for house prices in Ames, Iowa, does not contain informati
 - These will be applied to the dataset as a whole (with fewer transformations applied prior to training) and on a dataset that has undergone substantial transformation prior to training to address variation, distribution, and missing values in the dataset.
 - As part of the machine learning process, the most important features for predicting house prices will be identified (through assessing feature importance). This analysis is not the same as the correlation and PPS analysis (which examines relationships between features rather than contribution to the machine learning model).
 - The machine learning model will enable the prediction of the house prices of the four specific properties, and will be produced as a predicted number with a range based on the 95% confidence interval attached to the figure.
+
 #### Business Requirement 3: A tool to predict house prices of other properties in Ames, Iowa
 - A Household Prediction Tool will be developed from the machine learning analysis, whereby based on the best fitting model and the features identified as most important, the user will be able to enter certain key characteristics into a tool and produce a predicted house price for any property in Ames, Iowa.
 - The Houseprice Predictor Tool will be deployed and hosted on Heroku.
@@ -74,29 +87,35 @@ The dataset available for house prices in Ames, Iowa, does not contain informati
 - In order to develop a machine learning model to predict houseprices, a regression model will be built to be trained on a supervised dataset with a continuous numeric target variable.
 - The dataset has 1,460 records of house prices with associated characteristics.
 - The dataset which will be used will not have undergone extensive feature engineering prior to the training, other than the removal of missing values and non-valid data (such as where data has been defaulted to the lowest value in the dataset, leading to distortion of the distribution of data).
+- The risk of overfitting is managed by using cross-validation in the Grid Search CV.
 - The success metric for the regression analysis will be:
     - At least 0.75 R2 scores both for the Train and Test Set.
     - The output is an identified model with hyperparameters and feature engineering steps.
     - There will also be an assessment of feature importance, to identify the features that account for the most variance in the dataset.
     - The outcome of the analysis is a predicted sale price, with 95% confidence intervals in order to produce a range.
+- The model will have failed if the R2 performance metrics are below 0.75.
 - The target for the model is SalePrice, with all features present except EnclosedPorch and WoodDeckSF, both of which have more than 80% missing data.
 #### Regression Model with full dataset and Principal Component Analysis
 - A second machine learning model will be built to predict houseprices, consisting of a regression model with a Principal Component Analysis (PCA) element. This will be built to be trained on a supervised dataset with a continuous numeric target variable.
 - The dataset has 1,460 records of house prices with associated characteristics.
 - The dataset which will be used will not have undergone extensive feature engineering prior to the training, other than the removal of missing values and non-valid data (such as where data has been defaulted to the lowest value in the dataset, leading to distortion of the distribution of data).
+- The risk of overfitting is managed by using cross-validation in the Grid Search CV.
 - The success metric for the regression analysis with PCA will be:
     - At least 0.75 R2 scores both for the Train and Test Set.
     - The output is an identified model with hyperparameters and feature engineering steps.
     - The outcome of the analysis is a predicted sale price, with 95% confidence intervals in order to produce a range.
+- The model will have failed if the R2 performance metrics are below 0.75.
 - The target for the model is SalePrice, with all features present except EnclosedPorch and WoodDeckSF, both of which have more than 80% missing data.
 #### Classification Model
 - A technique to convert the ML task from Regression to Classification was employed in addition to the regression analysis for use with the full dataset. The continuous numerical target (SalePrice) with a range from 34,900-755,000 was recoded into a new feature with 4 bands: '129,975 and under', '129,975 to 163,000', '163,000 to 214,000', and '214,000 and over'.
 - As a result the target is categorical and contains 4 classes. This was used to develop a classification model, which is supervised and uni-dimensional.
 - The target for the model is a categorised feature SalePrice, with all features present except EnclosedPorch and WoodDeckSF, both of which have more than 80% missing data.
+- The risk of overfitting is managed by using cross-validation in the Grid Search CV.
 - The model performance is measured with recall, precision, and f1-scores.
 - The model success metrics are:
     - At least 0.75 Recall on train and test set
     - The outcome of the analysis is a predicted sale price band.
+- The model will have failed if the Recall performance metrics are below 0.75.
 #### Regression Model with most important features only
 - In order to develop a machine learning model to predict houseprices, a regression model will be built to be trained on a supervised dataset with a continuous numeric target variable.
 - The dataset has 1,460 records of house prices with associated characteristics.
@@ -107,10 +126,12 @@ The dataset available for house prices in Ames, Iowa, does not contain informati
     - TotalBsmtSF
     - GarageArea
     - YearBuilt
+- The risk of overfitting is managed by using cross-validation in the Grid Search CV.
 - The success metric for the regression analysis will be:
     - At least 0.75 R2 scores both for the Train and Test Set.
     - The output is an identified model with hyperparameters and feature engineering steps.
     - The outcome of the analysis is a predicted sale price, with 95% confidence intervals in order to produce a range.
+- The model will have failed if the R2 performance metrics are below 0.75.
 - The target for the model is SalePrice, with only the selected features present.
 #### Regression Model with feature engineered dataset
 - In order to develop a machine learning model to predict houseprices, a regression model will be built to be trained on a supervised and feature engineered dataset with a continuous numeric target variable.
@@ -141,10 +162,12 @@ The dataset available for house prices in Ames, Iowa, does not contain informati
         - 1stFlrSF
         - GarageYrBlt
         - YearBuilt
+- The risk of overfitting is managed by using cross-validation in the Grid Search CV.
 - The success metric for the regression analysis analysis with feature engineered features will be:
     - At least 0.75 R2 scores both for the Train and Test Set.
     - The output is an identified model with hyperparameters and feature engineering steps.
     - The outcome of the analysis is a predicted sale price, with 95% confidence intervals in order to produce a range.
+- The model will have failed if the R2 performance metrics are below 0.75.
 - The target for the model is SalePrice, with feature engineered variables except EnclosedPorch, WoodDeckSF (both of which were excluded due to over 80% of data missing), 1stFlrSF, GarageYrBlt, and YearBuilt.
 
 ## Dashboard Design
@@ -194,8 +217,8 @@ The dataset available for house prices in Ames, Iowa, does not contain informati
 - Pipeline performance metrics
 
 ## Unfixed Bugs
-- There is a bug whereby repeated entries in the Houseprice Predictor Tool redirects the user back to the Summary Page
-- There is a bug whereby the Summary Page also displays the Houseprice Predictor Tool on loading (and after redirect)
+- There is a bug in the IDE preview of the app whereby repeated entries in the Houseprice Predictor Tool redirects the user back to the Summary Page. This has not carried over to the deployed Heroky version of the app so has been left.
+- There is a bug in the IDE preview of the app whereby the Summary Page also displays the Houseprice Predictor Tool on loading (and after redirect). This has not carried over to the deployed Heroky version of the app so has been left.
 
 ## Deployment
 ### Heroku

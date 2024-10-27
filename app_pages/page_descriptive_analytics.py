@@ -1,7 +1,5 @@
-import plotly.express as px
 import matplotlib.pyplot as plt
 import numpy as np
-from feature_engine.discretisation import ArbitraryDiscretiser
 import streamlit as st
 import seaborn as sns
 import pandas as pd
@@ -9,7 +7,6 @@ import ppscore as pps
 from src.data_management import load_houseprice_data
 
 sns.set_style("whitegrid")
-
 
 def page_descriptive_analytics_body():
     
@@ -51,8 +48,20 @@ The correlation study found that houseprice is related to:
 - The year the house and garage was built (variables: YearBuilt, GarageYrBlt)\n\n
 
 Some of the characteristics are clearly linked (such as the year the house was built
-and the year the garage was built, and the size of the 1st floor, living area above ground, and the basement size),
-as can be seen in the Spearman correlation heatmap below.
+and the year the garage was built, and the size of the 1st floor, living area above ground, 
+and the basement size), as can be seen in the Spearman correlation heatmap below.\n\n
+
+In the heatmap, the value runs from 0 (no correlation), to 1 (perfect correlation). 
+The list of the most highly correlated variables is based on the top 5 correlated variables 
+from each of the Spearman and Pearson correlations, giving a total of 7 variables. 
+
+The scatter plots illustrate how houseprices are correlated with each of the 
+selected variables by showing how each individual house maps to the houseprice.
+
+The Correlation and Predictive Power Score Study successfully meets Business Requirment 1:
+*The client is interested in discovering how the characteristics
+of houses correlate with the sale price. Therefore, the client expects data visualizations 
+of the correlated variables against the sale price to show how they are linked.*
 """
     )
 
@@ -66,7 +75,7 @@ as can be seen in the Spearman correlation heatmap below.
     # Heatmap
     if st.checkbox("Correlation Heatmap"):
         st.write(
-            "* Boxes that are lighter green or yellow show more highly correlated variables" 
+            "* Boxes that are lighter green or yellow show more highly correlated variables " 
             "(the heatmaps may take a moment to load)"
             )
         correlation_heatmap(df)
