@@ -1,11 +1,9 @@
 import streamlit as st
 
-
 def page_project_hypothesis_body():
 
     st.write("### Project Hypothesis and Validation\n")
 
-    # conclusions taken from "02 - Churned Customer Study" notebook
     st.write(
     """
     The project had three hypotheses that were validated through the analysis and modelling:
@@ -13,9 +11,9 @@ def page_project_hypothesis_body():
     are: Prices of Compatible Properties; The Neighbourhood; The Home’s Age and Condition; the Property Size;
     and the State of the Housing Market.\n
     The dataset available for house prices in Ames, Iowa, does not contain information about compatible properties,
-    neighbourhood, or the housing market, so the first hypothesis is that:\n
+    neighbourhood, or the housing market, so the hypotheses are:\n
     ---
-    **1** - The Age, Condition, and Size of the house will be the key predictors of house prices from the available dataset.\n
+    **1** - The first hypothesis is that Age, Condition, and Size of the house will be the key predictors of house prices from the available dataset.\n
     **Validation: True**. Correlation analysis and analysis show that the most important characteristics for predicting
     the value of a house are:\n
     * The overall quality of the house and kitchen (variables: OverallQual, KitchenQual)\n

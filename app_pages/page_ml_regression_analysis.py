@@ -41,7 +41,7 @@ def page_ml_regression_analysis_body():
         """
     )
 
-    # load pipeline files
+    # Loading pipeline data files
     version = 'v1'
     pipeline_best = load_pkl_file(
         f"outputs/ml_pipeline/regression_analysis/{version}/pipeline_best.pkl")
@@ -58,7 +58,7 @@ def page_ml_regression_analysis_body():
 
     st.write("---")
 
-    # Display pipeline and feature importance
+    # Displaying pipeline and feature importance
     st.write("**ML Pipeline Steps**")
     st.code(pipeline_best, language='python')
 
@@ -70,7 +70,7 @@ def page_ml_regression_analysis_body():
 
     st.write("---")
 
-    # Evaluate and display model performance
+    # Evaluating and displaying model performance
     st.write("**Performance on Train and Test Sets**")
     performance_results = regression_performance(X_train, y_train, X_test, y_test, pipeline_best)
     st.write("_**Train Set**_")
